@@ -8,23 +8,23 @@ services:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
         volumes:
-            - pgdata:- /usr/app/var/lib/postgresql/data
+            - pgdata:/var/lib/postgresql/data
     redis:
         image: redis:alpine
-    # celery:
-    #     build: 
-    #         context: .
-    #     restart: always
-    #     command: celery -A celery_redis_app worker -l INFO
-    #     volumes:
-    #         - .:/usr/app/
-    #     environment:
-    #         - CELERY_BROKER=redis://redis:6379/0
-    #         - CELERY_BACKEND=redis://redis:6379/0
-    #     container_name: celery_container    
-    #     depends_on:
-    #         - redis
-    #         - pgdatabase
+    celery:
+        build: 
+            context: .
+        restart: always
+        command: celery -A celery_redis_app worker -l INFO
+        volumes:
+            - .:/usr/app/
+        environment:
+            - CELERY_BROKER=redis://redis:6379/0
+            - CELERY_BACKEND=redis://redis:6379/0
+        container_name: celery_container    
+        depends_on:
+            - redis
+            - pgdatabase
 volumes:
     pgdata:
 
